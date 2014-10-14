@@ -12,7 +12,7 @@ def get_student_by_github(github):
     query = """SELECT first_name, last_name, github FROM Students WHERE github = ?"""
     DB.execute(query, (github,))
     row = DB.fetchone()  ### gets a row; places values via columns in a TUPLE. 
-    print """\
+    print """
 Student: %s %s
 Github account: %s"""%(row[0], row[1], row[2])
 
@@ -34,6 +34,25 @@ def make_new_student(first_name, last_name, github):
     print "Successfully added student: %s %s" %(first_name, last_name)
 
 
+def project_query(title):
+    """ Query our database projects table and pass in the project title then print the project id, description 
+        and max grade"""
+
+    query = """SELECT * FROM projects WHERE title = ?"""
+    DB.execute(query, (title,))
+    row = DB.fetchone()  ### gets a row; places values via columns in a TUPLE. 
+    print "Project Data: %s %s %s %s"%(row[0], row[1], row[2], row[3])
+
+def get_grade(project_title, first_name, last_name):
+    """ Query our database grades join students tables with the project title, the student first_name and the last name then print grade"""
+
+    query = """SELECT grades.grade FROM grades JOIN students ON (grades.student_github = students.github) WHERE grades.project_title  = ? AND
+    students.first_name = ? AND students.last_name = ?"""
+    DB.execute(query, (project_title, first_name, last_name,))
+    row = DB.fetchone()  ### gets a row; places values via columns in a TUPLE. 
+    print "The grade for the student is: %s"%(row[0])
+
+
 def main():
     connect_to_db()
     command = None
@@ -47,6 +66,10 @@ def main():
             get_student_by_github(*args)  #call this fn and bring the rest of arg [1:]
         elif command == "new_student": #if our first thing in the list is new_student
             make_new_student(*args)  #call this fn and bring the rest of args to it
+        elif command == "project": #call function to retrieve project data
+            project_query(*args)
+        elif command == "get_grade":
+            get_grade(*args)
 
     CONN.close()  # close db
 
