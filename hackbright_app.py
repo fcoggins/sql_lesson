@@ -48,7 +48,7 @@ def get_grade(project_title, first_name, last_name):
     students.first_name = ? AND students.last_name = ?"""
     DB.execute(query, (project_title, first_name, last_name,))
     row = DB.fetchone()  ### gets a row; places values via columns in a TUPLE. 
-    return "The grade for the student is: %s"%(row[0])
+    return row[0]
 
 
 def main():
