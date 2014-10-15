@@ -12,7 +12,9 @@ def get_student_by_github(github):
     query = """SELECT first_name, last_name, github FROM Students WHERE github = ?"""
     DB.execute(query, (github,))
     row = DB.fetchone()  ### gets a row; places values via columns in a TUPLE. 
-    return row
+    return """\
+Student: %s %s
+Github account: %s"""%(row[0], row[1], row[2])
 
 def connect_to_db():
     #### this code is used to interact wit hthe databse so the queries can be executed.
